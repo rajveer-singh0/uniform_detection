@@ -2,6 +2,17 @@
 
 This is the Node.js/Express.js conversion of the original Flask-based uniform detection application. It maintains the same functionality with a modern JavaScript backend.
 
+---
+
+## 🚀 **LIVE DEMO**
+
+🔥 **Try it out now:**  
+👉 **[OPEN UNIFORM DETECTION MODEL APP](https://uniform-detection-model.streamlit.app/)**  
+
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://uniform-detection-model.streamlit.app/)
+
+---
+
 ## Features
 
 - Real-time uniform detection using AI/ML
@@ -75,11 +86,6 @@ The application will be available at `http://localhost:3000`
 4. Results are displayed with confidence scores and visual indicators
 
 
-🚀 Live Demo
-
-Check out the live demo of the Uniform Detection Model here:
-
-👉 Open the App on Streamlit
 
 ## Converting from Flask
 
