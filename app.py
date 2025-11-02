@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # ................code 1................
 
 # import os
@@ -378,6 +379,7 @@
 
 # code for streamlit 
 
+=======
 import os
 import io
 import numpy as np

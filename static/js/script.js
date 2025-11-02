@@ -155,8 +155,22 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function processImage(file) {
-    // Show loading state
-    detectionResults.innerHTML = "<p>Processing image... Please wait.</p>";
+    // Show loading state with enhanced UI
+    const loadingHTML = `
+      <div style="text-align: center; padding: 3rem;">
+        <div style="display: inline-block; width: 60px; height: 60px; border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem;"></div>
+        <h3 style="color: #667eea; margin-bottom: 0.5rem;">Processing Image...</h3>
+        <p style="color: #666;">Our AI is analyzing your image</p>
+      </div>
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    `;
+    
+    document.getElementById('resultsList').innerHTML = loadingHTML;
     resultsModal.style.display = "block";
 
     // Create FormData to send to Flask backend
@@ -174,30 +188,77 @@ document.addEventListener("DOMContentLoaded", function () {
           // Display the processed image
           resultImage.src = data.processed_image || URL.createObjectURL(file);
 
-          // Display detection results
+          // Display detection results with enhanced UI
           if (data.detections && data.detections.length > 0) {
-            let resultsHTML = "<h3>Detection Results:</h3><ul>";
-            data.detections.forEach((detection) => {
-              resultsHTML += `<li>${detection.class}: ${Math.round(
-                detection.confidence * 100
-              )}% confidence</li>`;
+            const detection = data.detections[0];
+            const confidence = Math.round(detection.confidence * 100);
+            
+            // Show detection badge
+            const badge = document.getElementById('detectionBadge');
+            const badgeText = document.getElementById('badgeText');
+            badge.style.display = 'flex';
+            badgeText.textContent = `${detection.class} (${confidence}%)`;
+            
+            // Create enhanced results list
+            let resultsHTML = '';
+            data.detections.forEach((detection, index) => {
+              const confidence = Math.round(detection.confidence * 100);
+              resultsHTML += `
+                <div class="result-item" style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; background: rgba(255, 255, 255, 0.7); border-radius: 15px; border: 1px solid rgba(102, 126, 234, 0.1); transition: all 0.3s ease; position: relative; overflow: hidden; animation: slideInUp 0.5s ease-out ${index * 0.1}s both;">
+                  <div class="detection-info" style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="detection-icon" style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(45deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                      <i class="fas ${detection.class === 'uniform' ? 'fa-user-tie' : 'fa-user'}"></i>
+                    </div>
+                    <div>
+                      <div class="detection-class" style="font-weight: 600; color: #2c3e50; font-size: 1.2rem; text-transform: capitalize;">${detection.class}</div>
+                      <div class="detection-label" style="color: #666; font-size: 0.9rem;">Detection Result</div>
+                    </div>
+                  </div>
+                  <div class="confidence-score" style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="confidence-bar" style="width: 120px; height: 8px; background: rgba(102, 126, 234, 0.2); border-radius: 4px; overflow: hidden; position: relative;">
+                      <div class="confidence-fill" style="height: 100%; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 4px; width: ${confidence}%; transition: width 1s ease-out 0.5s;"></div>
+                    </div>
+                    <div class="confidence-percentage" style="font-weight: 600; color: #667eea; font-size: 1.1rem; min-width: 50px;">${confidence}%</div>
+                  </div>
+                </div>
+              `;
             });
-            resultsHTML += "</ul>";
-            detectionResults.innerHTML = resultsHTML;
+            
+            document.getElementById('resultsList').innerHTML = resultsHTML;
           } else {
-            detectionResults.innerHTML =
-              "<p>No uniforms detected in the image.</p>";
+            document.getElementById('resultsList').innerHTML = `
+              <div style="text-align: center; padding: 2rem; background: rgba(255, 255, 255, 0.7); border-radius: 15px; border: 1px solid rgba(255, 193, 7, 0.3);">
+                <div style="font-size: 2rem; color: #ffc107; margin-bottom: 1rem;">
+                  <i class="fas fa-search"></i>
+                </div>
+                <h3 style="color: #2c3e50; margin-bottom: 0.5rem;">No Uniforms Detected</h3>
+                <p style="color: #666;">No uniform patterns were found in this image.</p>
+              </div>
+            `;
           }
         } else {
-          detectionResults.innerHTML = `<p>Error: ${
-            data.error || "Unknown error occurred"
-          }</p>`;
+          document.getElementById('resultsList').innerHTML = `
+            <div style="text-align: center; padding: 2rem; background: rgba(255, 255, 255, 0.7); border-radius: 15px; border: 1px solid rgba(220, 53, 69, 0.3);">
+              <div style="font-size: 2rem; color: #dc3545; margin-bottom: 1rem;">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <h3 style="color: #2c3e50; margin-bottom: 0.5rem;">Processing Error</h3>
+              <p style="color: #666;">${data.error || "Unknown error occurred"}</p>
+            </div>
+          `;
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        detectionResults.innerHTML =
-          "<p>An error occurred while processing the image.</p>";
+        document.getElementById('resultsList').innerHTML = `
+          <div style="text-align: center; padding: 2rem; background: rgba(255, 255, 255, 0.7); border-radius: 15px; border: 1px solid rgba(220, 53, 69, 0.3);">
+            <div style="font-size: 2rem; color: #dc3545; margin-bottom: 1rem;">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 style="color: #2c3e50; margin-bottom: 0.5rem;">Network Error</h3>
+            <p style="color: #666;">An error occurred while processing the image.</p>
+          </div>
+        `;
       });
   }
 
