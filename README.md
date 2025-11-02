@@ -74,6 +74,13 @@ The application will be available at `http://localhost:3000`
 3. The model detects whether a person in the image is wearing a uniform
 4. Results are displayed with confidence scores and visual indicators
 
+
+🚀 Live Demo
+
+Check out the live demo of the Uniform Detection Model here:
+
+👉 Open the App on Streamlit
+
 ## Converting from Flask
 
 This project was converted from a Flask application. Key changes include:
