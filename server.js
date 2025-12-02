@@ -98,24 +98,60 @@ app.post('/process_image', upload.single('file'), async (req, res) => {
   }
 });
 
-// Function to process image (placeholder implementation)
+// Function to process image using Python model
 async function processImage(imgPath, filename) {
-  try {
-    // Simulate model prediction
-    const prediction = 0.73; // Placeholder prediction
-    const label = prediction > 0.5 ? 'uniform' : 'non_uniform';
-    const confidence = prediction > 0.5 ? prediction * 100 : (1 - prediction) * 100;
+  const { spawn } = require('child_process');
+  
+  return new Promise((resolve, reject) => {
+    // Call Python script to make prediction
+    const python = spawn('python', ['predict.py', imgPath]);
     
-    return {
-      label: label,
-      confidence: confidence
-    };
-  } catch (error) {
-    console.error('Image processing error:', error);
-    return {
-      error: error.message
-    };
-  }
+    let output = '';
+    let errorOutput = '';
+    
+    python.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+    
+    python.stderr.on('data', (data) => {
+      errorOutput += data.toString();
+    });
+    
+    python.on('close', (code) => {
+      if (code !== 0) {
+        console.error('Python error:', errorOutput);
+        resolve({
+          error: 'Failed to process image with model'
+        });
+        return;
+      }
+      
+      try {
+        // Parse the output from predict.py
+        // Expected format: "✅ Prediction: uniform (confidence: 73.00%)"
+        const match = output.match(/Prediction: (\w+) \(confidence: ([\d.]+)%\)/);
+        
+        if (match) {
+          const label = match[1];
+          const confidence = parseFloat(match[2]);
+          
+          resolve({
+            label: label,
+            confidence: confidence
+          });
+        } else {
+          resolve({
+            error: 'Could not parse prediction output'
+          });
+        }
+      } catch (error) {
+        console.error('Error parsing output:', error);
+        resolve({
+          error: error.message
+        });
+      }
+    });
+  });
 }
 
 // Start server
