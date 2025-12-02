@@ -1,26 +1,49 @@
-# Uniform Detection - Node.js/Express Version
+# 👕 **UNIFORM DETECTION – Node.js / Express Version**
 
-This is the Node.js/Express.js conversion of the original Flask-based uniform detection application. It maintains the same functionality with a modern JavaScript backend.
+This is the **Node.js / Express.js** conversion of the original **Flask-based Uniform Detection Application**.  
+It delivers the **same AI-powered functionality** with a **modern JavaScript backend**, ensuring better scalability and maintainability.  
 
-## Features
+---
 
-- Real-time uniform detection using AI/ML
-- Image upload and camera capture capabilities
-- Responsive web interface with modern UI
-- Real-time processing and visualization
+## 🚀 **LIVE DEMO**
 
-## Prerequisites
+🔥 **Try it out now:**  
+👉 **[OPEN UNIFORM DETECTION MODEL APP](https://uniform-detection-model.streamlit.app/)**  
 
-- Node.js (v14 or higher)
-- npm (v6 or higher)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://uniform-detection-model.streamlit.app/)
 
-## Installation
+---
 
-1. Clone or download this repository
+## ✨ **Key Features**
+
+- 🎯 **Real-time Uniform Detection** using YOLOv8 / TensorFlow.js  
+- 📸 **Image Upload** & **Camera Capture** capabilities  
+- 💻 **Responsive and Interactive UI** built for web and mobile  
+- ⚙️ **Instant Processing & Visualization** of detection results  
+- 📊 **Confidence Score** and detection highlights displayed in real time  
+
+---
+
+## 🧩 **Prerequisites**
+
+Make sure you have the following installed before running the app:
+
+- 🟢 **Node.js** (v14 or higher)  
+- 🟣 **npm** (v6 or higher)
+
+---
+
+## ⚙️ **Installation Guide**
+
+1. **Clone or download** this repository
+   ```bash
+   git clone https://github.com/yourusername/uniform-detection-node.git
+   cd uniform-detection-node
+
 2. Install dependencies:
    ```bash
    npm install
-   ```
+   ```  
 
 ## Running the Application
 
@@ -34,7 +57,7 @@ To start the production server:
 npm start
 ```
 
-The application will be available at `http://localhost:3000`
+Then open your browser and visit 👉 `http://localhost:3000`
 
 ## Project Structure
 
@@ -73,6 +96,8 @@ The application will be available at `http://localhost:3000`
 2. Images are processed using a pre-trained TensorFlow model
 3. The model detects whether a person in the image is wearing a uniform
 4. Results are displayed with confidence scores and visual indicators
+
+
 
 ## Converting from Flask
 
